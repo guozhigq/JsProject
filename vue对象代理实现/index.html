@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue对象代理实现</title>
+</head>
+<body>
+    
+</body>
+<script>
+    var vm = new Vue({
+        data() {
+            return {
+                a: 1,
+                b: 2
+            }
+        }
+    });
+
+    console.log(vm.a)
+    vm.b = 3
+    console.log(vm)
+    
+    function Vue (options) {
+        var _data = options.data(),
+            _this = this;
+        
+        for(var k in _data) {
+            (function(k) {
+                Object.defineProperty(_this, k, {
+                    get() {
+                        console.log('GET:'+k)
+                        return _data[k]
+                    },
+                    set(newValue) {
+                        console.log('SET:'+k)
+
+                        _data[k] = newValue
+                    }
+                })
+            })(k)
+            
+        }
+    }
+</script>
+</html>
