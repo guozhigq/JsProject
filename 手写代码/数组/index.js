@@ -52,3 +52,36 @@ for(let i = 0; i < arr.length; i++){
 
 // 递归去重
 
+var res = arr.filter((item, idx, arr) => {
+    return arr.indexOf(item) === idx
+})
+
+var arr=[12, 5, 8, 8, 130, 44,130,'a','b','a']
+var obj={};
+arr.forEach(function(item){
+obj[item]=item;
+})
+Object.keys(obj)
+console.log(Object.keys(obj))
+
+
+
+// 数组扁平化
+
+let arr = [1, [2, [3, [4, [5 ]]]], 6];
+
+// 方法一
+arr = arr.flat(Infinity);
+
+// 方法二
+const res = [];
+const fn = arr => {
+    for(let i = 0; i < arr.length; i ++ ) {
+        if (Array.isArray(arr[i])) {
+            fn(arr[i]);
+        } else {
+            res.push(arr[i])
+        }
+    }
+}
+fn(arr)
