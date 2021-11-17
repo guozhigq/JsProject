@@ -70,12 +70,12 @@ console.log(Object.keys(obj))
 
 let arr = [1, [2, [3, [4, [5 ]]]], 6];
 
-// 方法一
+// 数组扁平化1
 arr = arr.flat(Infinity);
 
-// 方法二
+// 数组扁平化2
 const res = [];
-const fn = arr => {
+const fn = function(arr) {
     for(let i = 0; i < arr.length; i ++ ) {
         if (Array.isArray(arr[i])) {
             fn(arr[i]);
@@ -84,4 +84,50 @@ const fn = arr => {
         }
     }
 }
-fn(arr)
+
+// 数组扁平化3
+function flatten(arr) {
+    if(!Array.isArray(arr)){return}
+    var res = []
+    for(let i = 0; i< arr.lrngth; i ++){
+        if(Array.isArray[arr[i]]){
+            res = res.concat(flatten(arr[i]))
+        }else{
+            res.push(arr[i])
+        }
+    }
+    return arr
+}
+
+// 数组扁平化4
+function flatten(arr) {
+    return arr.reduce((pre,next)=>{
+        return pre.concat(Array.isArray[next] ? flatten(next) : next)
+    },[])
+};
+
+// 数组扁平化5
+function flatten(arr) {
+    while(arr.some(item => Array.isArray(item))){
+        arr = [].concat(...arr)
+    }
+    return arr;
+};
+
+// 数组扁平化6
+function flatten(input) {
+    var stack = [...arr];
+    var res = [];
+    if(stack.length){
+        let next = stack.pop();
+        if(Array.isArray[next]){
+            res.push(...next)
+        }else{
+            res.push(next)
+        }
+    }
+    return res.reverse();
+}
+
+// forEach实现
+function foreach() {};

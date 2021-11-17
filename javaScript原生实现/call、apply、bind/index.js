@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-05-30 22:56:43
+ * @LastEditTime: 2021-11-08 22:09:45
+ * @LastEditors: your name
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: /JsProject/javaScript原生实现/call、apply、bind/index.js
+ */
 
 // call 函数的实现步骤：
 // 1. 判断调用对象是否为函数，即使我们是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。
@@ -32,7 +40,13 @@ Function.prototype.myCall = function(context) {
 
 }
 
-
+var foo = {
+  value: 1
+}
+function bar() {
+  console.log(this.value)
+}
+bar.myCall(foo)
 // apply 函数的实现步骤：
 // 1. 判断调用对象是否为函数，即使我们是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。
 // 2. 判断传入上下文对象是否存在，如果不存在，则设置为 window 。
