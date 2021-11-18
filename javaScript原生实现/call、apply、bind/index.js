@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-05-30 22:56:43
- * @LastEditTime: 2021-11-08 22:09:45
- * @LastEditors: your name
+ * @LastEditTime: 2021-11-18 12:07:15
+ * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /JsProject/javaScript原生实现/call、apply、bind/index.js
  */
@@ -105,3 +105,36 @@ Function.prototype.myBind = function(context) {
       );
     };
 };
+
+// 
+Function.prototype.myCall = function(context){
+  let context = context || window;
+  let res;
+  let args = Array.from(arguments)
+  context.fn = this;
+  res = context.fn(...args);
+  delete context.fn;
+  return res
+}
+
+Function.prototype.apply  = function(context,arr){
+  let context = context || window;
+  let res ;
+  context.fn = this;
+  res = context.fn(...arr)
+  delete context.fn
+  return res
+}
+
+Function.prototype.myBind = function(context) {
+  const self = this;
+  let args = [...args].slice[1]
+  let fun = function() {}
+  let bind =  function() {
+    let bindArgs = [...arguments]
+    return self.apply(this instanceof fun ? this : context,args.concat(bindArgs))
+  }
+  fun.prototype = this.prototype;
+  bind.prototype = new fun()
+  return bind
+}

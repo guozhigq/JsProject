@@ -131,3 +131,42 @@ function flatten(input) {
 
 // forEach实现
 function foreach() {};
+
+
+function unique(arr) {
+    let res = [];
+    for(let i=0;i<arr.length;i++){
+        if(res.indexOf(arr[i]) == -1){
+            res.push(arr[i])
+        }
+    }
+    return res
+}
+
+function unique(arr) {
+    let res = [];
+    for(let i=0;i<arr.length;i++){
+        if(!res.includes(arr[i])){
+            res.push(arr[i])
+        }
+    }
+    return res
+}
+
+function unique(arr) {
+    let map = new Map();
+    let res = []
+    for(let i = 0 ;i<arr.length; i++){
+        if(!map.hasOwnProperty(arr[i])){
+            map.set(arr[i],1)
+            res.push(arr[i])
+        }
+    }
+}
+
+function unique(arr){
+    let res = arr.filter((item, index, arr) =>{
+        return arr.indexOf(item) === index
+    })
+    return arr
+} 
