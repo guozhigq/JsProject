@@ -1,7 +1,7 @@
 /*
  * @Author: guozhigq
  * @Date: 2021-06-02 21:40:43
- * @LastEditTime: 2021-11-17 17:41:28
+ * @LastEditTime: 2021-11-19 16:38:49
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /JsProject/手写代码/其他/index.js
@@ -101,3 +101,24 @@ function deepClone2(origin, hashMap = new WeakMap()) {
 // 原型、原型链
 // 闭包
 // for in、for of
+
+// 分割数字，每隔三位使用逗号分隔一次，参数是Number，返回分隔后的字符串。
+
+function paddingNum(inputNum) {
+    let flag = inputNum > 0 ? true : false;
+    let numArr = Math.abs(inputNum).toString().split('.');
+    let right = numArr[1] ? '.' + numArr[1] : '';   // 小数点右边的数字
+    let left = numArr[0];  // 小数点左边的数字
+    let temp = '';
+    while (left.length > 3) {
+        // str.slice(start, end); 截取字符串，返回截取的字符串，end取不到
+        temp = ',' + left.slice(-3) + temp;
+        left = left.slice(0, left.length - 3);
+    }
+    return flag ? left + temp + right : '-' + left + temp + right;
+}
+
+console.log(paddingNum(2, 3));        // return '33'
+console.log(paddingNum(1234.56));     // return '1,234.56'
+console.log(paddingNum(123456789));   // return '123,456,789'
+console.log(paddingNum(-987654.3));   // return '-987,654.3'
