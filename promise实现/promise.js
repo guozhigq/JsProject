@@ -1,7 +1,7 @@
 /*
  * @Author: guozhigq
  * @Date: 2021-11-18 16:57:11
- * @LastEditTime: 2021-11-20 22:54:41
+ * @LastEditTime: 2021-11-20 23:36:19
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /JsProject/promise实现/promise.js
@@ -55,7 +55,7 @@ class myPromise {
 
     then(onFufilled, onRejected) {
         const realOnFufilled = typeof onFufilled === 'funciton' ? onFufilled : value=> value
-        const realOnRejected = typeof onRejected === 'function' ? onRejected : erroe=> {throw error}
+        const realOnRejected = typeof onRejected === 'function' ? onRejected : error=> {throw error}
         
         const promise2 = new myPromise((resolve, reject)=>{
 
@@ -151,10 +151,18 @@ class myPromise {
     value = null;
     reason = null;
 
+    // 
+    fulfilledCallback = [];
+    rejectedCallback = []
+
     resolve(value) {
         if(this.status === STATUS.PENDING){
             this.status = STATUS.FUFILLED;
             this.value = value
+
+            while(this.fulfilledCallback.length){
+                this.fulfilledCallback.shift()(value)
+            }
         }
     }
 
@@ -162,26 +170,95 @@ class myPromise {
         if(this.status === STATUS.PENDING){
             this.status = STATUS.REJECTED;
             this.reason = value
+
+            while(this.rejectedCallback.length){
+                this.rejectedCallback.shift()(value)
+            }
         }
     }
     then(onFufilled, onRejected) {
         let realOnFufilled = typeof onFufilled === 'function' ? onFufilled : value=> value;
-        let realOnRejected = typeof onRejected === 'function' ? onRejected : reason => {new Error()}
+        let realOnRejected = typeof onRejected === 'function' ? onRejected : error => {throw error()}
         
-        const fufilledMicroTask = () => {
-            queueMicrotask(()=>{
-                
-            })
+        let promise2 = new myPromise((resolve, reject) => {
+            const fufilledMicroTask = () => {
+                queueMicrotask(()=>{
+                    try{
+                        const x = realOnFufilled(this.value);
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                })
+            }
+            
+            const rejectedMicroTask = () =>{
+                queueMicrotask(()=>{
+                    try{
+                        const x = realOnRejected(this.reason);
+                        resolvePromise(promise2, x, resolve, reject)
+                    }catch(e){
+                        reject(e)
+                    }
+                })
+            }
+
+            if(this.status === STATUS.PENDING){
+                this.fulfilledCallback.push(fufilledMicroTask)
+                this.rejectedCallback.push(rejectedMicroTask)
+            }
+            if(this.staus === STATUS.FUFILLED){
+                realOnFufilled()
+            }
+            else if(this.staus === STATUS.REJECTED){
+                realOnRejected()
+            }
+            
+        })
+        
+        return promise2
+    }
+
+    resolvePrimise(promise2, x, resolve, reject){
+        if(promise2 === x){
+            return reject(new TypeError())
         }
 
-        let myPromise = new myPromise((resolve, reject) => {
-            if(this.staus == 'fufilled'){
-                realOnFufilled(value)
+        if(typeof x == 'objct' || typeof x == 'function'){
+            if(x === null){
+                return resolve(x)
             }
-            else if(this.staus == 'rejected'){
-                realOnRejected(value)
+
+            let then
+            try{
+                then = x.then
+            }catch(e) {
+                return reject(e)
             }
-        })
-        return myPromise
+
+            if(typeof then === 'function'){
+                let called = false;
+                
+                try{
+                    then.call(x,y=>{
+                        if(called) return;
+                        called = true;
+                        resolvePromise(promise, x, resolve, reject)
+                    },err=>{
+                        if(called) return;
+                        called = true;
+                        reject(err)
+                    })
+                }catch(error){
+                    if(called) return;
+                    reject(erroe)
+                }
+            }else{
+                resolve(x)
+            }
+
+        }else{
+            resolve(e)
+        }
     }
 }
