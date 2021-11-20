@@ -1,7 +1,7 @@
 <!--
  * @Author: guozhigq
  * @Date: 2021-11-19 16:39:04
- * @LastEditTime: 2021-11-19 20:07:02
+ * @LastEditTime: 2021-11-20 11:59:11
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /JsProject/问答/http2和http1的区别.md
@@ -69,3 +69,15 @@ http1.1存在的问题
     + 多路复用  
     + 头部压缩 使用encoder减少需要传输的header大小，避免header重复传输
     + 服务器推送
+
+
+由于多路复用，许多1.1时代的网络资源请求优化反而不起作用了
+
+文件合并（雪碧图）
+
+在以前会用到JS文件合并和雪碧图来减少HTTP请求的数量来达到优化目的。因为在1.1时代的TCP只能穿行复用，而现在可以多个文件并行传输。
+如果一个资源a更新，由于文件a,b,c合并，本地缓存合并文件abc都需要更新。在2.0时代，不压缩文件，能更精确更新资源，反而是更好的选择
+
+多域名
+
+之前由于浏览器对同一个域名下TCP连接数量的限制，会把文件a，b放在两个不同的域名下，防止超过TCP最大连接数量的HTTP请求被阻塞。 但由于多路复用，放在同一个域名下ab文件可以被同时下载，并且减少对多个域名建立TCP连接的时间浪费。

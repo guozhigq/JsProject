@@ -1,7 +1,7 @@
 /*
  * @Author: guozhigq
  * @Date: 2021-11-18 16:57:11
- * @LastEditTime: 2021-11-18 21:47:31
+ * @LastEditTime: 2021-11-20 22:54:41
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /JsProject/promise实现/promise.js
@@ -91,8 +91,8 @@ class myPromise {
                 realOnRejected()
             }
 
-            return promise2
         })
+        return promise2
     }
 }
 
@@ -134,5 +134,54 @@ function resolvePromise(promise, x, resolve, reject) {
         }
     }else{
         resolve(x)
+    }
+}
+
+const STATUS = {
+    PENDING: 'pending',
+    FUFILLED: 'fufilled',
+    REJECTED: 'rejected'
+}
+
+class myPromise {
+    constructor (exector) {
+        exector(this.resolve, this.reject)
+    }
+    status = STATUS.PENDING
+    value = null;
+    reason = null;
+
+    resolve(value) {
+        if(this.status === STATUS.PENDING){
+            this.status = STATUS.FUFILLED;
+            this.value = value
+        }
+    }
+
+    reject(value){
+        if(this.status === STATUS.PENDING){
+            this.status = STATUS.REJECTED;
+            this.reason = value
+        }
+    }
+    then(onFufilled, onRejected) {
+        let realOnFufilled = typeof onFufilled === 'function' ? onFufilled : value=> value;
+        let realOnRejected = typeof onRejected === 'function' ? onRejected : reason => {new Error()}
+        
+        const fufilledMicroTask = () => {
+            queueMicrotask(()=>{
+                
+            })
+        }
+
+        let myPromise = new myPromise((resolve, reject) => {
+            if(this.staus == 'fufilled'){
+                realOnFufilled(value)
+            }
+            else if(this.staus == 'rejected'){
+                realOnRejected(value)
+            }
+        })
+        return myPromise
     }
 }

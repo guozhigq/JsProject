@@ -1,7 +1,7 @@
 /*
  * @Author: guozhigq
  * @Date: 2021-11-18 17:07:25
- * @LastEditTime: 2021-11-18 17:11:13
+ * @LastEditTime: 2021-11-20 14:31:00
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /JsProject/手写代码/数组/shuffle.js
@@ -23,4 +23,17 @@ function shuffle(arr) {
         arr[j] = x
     }
     return arr
+}
+
+// 11.20
+
+function shuffle(arr) {
+    let x,i,j;
+    for(i = arr.length; i; i--){
+        j = Math.floor(Math.random()*i)
+        x = arr[i]
+        arr[i-1] = arr[j]
+        arr[j] = x
+    }
+    return arr 
 }
